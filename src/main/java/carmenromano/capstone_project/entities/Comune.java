@@ -8,17 +8,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import com.opencsv.bean.CsvBindByPosition;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 public class Comune {
     @Id
     @GeneratedValue
-    UUID id;
+    private UUID id;
 
     @NotNull
     @CsvBindByPosition(position = 0)
@@ -38,7 +44,7 @@ public class Comune {
 
     @ManyToOne
     @JoinColumn(name = "provincia_id")
-    private Provincia provinciaList;
+    private Provincia provinciaEntity;
 
     public Comune(String codiceProvincia, String codiceComune, String name, String provincia) {
         this.codiceProvincia = codiceProvincia;

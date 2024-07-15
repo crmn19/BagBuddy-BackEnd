@@ -1,6 +1,5 @@
 package carmenromano.capstone_project.entities;
 
-
 import com.opencsv.bean.CsvBindByPosition;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,4 +28,9 @@ public class Regione {
     @CsvBindByPosition(position = 2)
     private String denominazioneRegione;
 
+    public Regione(String codiceRegione, String denominazioneRegione) {
+        this.codiceRegione = codiceRegione;
+        this.denominazioneRegione = denominazioneRegione;
+    }
 }
+

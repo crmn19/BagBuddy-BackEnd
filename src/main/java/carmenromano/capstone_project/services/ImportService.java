@@ -9,32 +9,41 @@ import carmenromano.capstone_project.repositories.ProvinciaRepository;
 import carmenromano.capstone_project.repositories.RegioneRepository;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
-
 @Service
 public class ImportService {
 
     @Autowired
     private ComuneRepository comuneRepository;
+
     @Autowired
     private ProvinciaRepository provinciaRepository;
 
     @Autowired
     private RegioneRepository regioneRepository;
 
-    public void importProvince(String filePath) {
-        try (Reader reader = new FileReader(filePath)) {
-            CsvToBean<Provincia> csvToBean = new CsvToBeanBuilder<Provincia>(reader)
-                    .withType(Provincia.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
+    @PostConstruct
+    public void init() {
+        importProvince();
+        importComuni();
+        importRegioni();
+    }
 
-            List<Provincia> province = csvToBean.parse();
+    public void importProvince() {
+        try (Reader reader = new FileReader("gi_province.csv")) {
+            List<Provincia> province = new CsvToBeanBuilder<Provincia>(reader)
+                    .withType(Provincia.class)
+                    .withSeparator(';')
+                    .withSkipLines(1)
+                    .build()
+                    .parse();
+
             provinciaRepository.saveAll(province);
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,11 +51,12 @@ public class ImportService {
     }
 
 
-    public void importComuni(String filePath) {
-        try (Reader reader = new FileReader(filePath)) {
+    public void importComuni() {
+        try (Reader reader = new FileReader("gi_comuni.csv")) {
             CsvToBean<Comune> csvToBean = new CsvToBeanBuilder<Comune>(reader)
                     .withType(Comune.class)
-                    .withIgnoreLeadingWhiteSpace(true)
+                    .withSeparator(';')
+                    .withSkipLines(1)
                     .build();
 
             List<Comune> comuni = csvToBean.parse();
@@ -55,14 +65,16 @@ public class ImportService {
             e.printStackTrace();
         }
     }
-    public void importRegioni(String filePath) {
-        try (Reader reader = new FileReader(filePath)) {
-            CsvToBean<Regione> csvToBean = new CsvToBeanBuilder<Regione>(reader)
-                    .withType(Regione.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
 
-            List<Regione> regioni = csvToBean.parse();
+    public void importRegioni() {
+        try (Reader reader = new FileReader("gi_regioni.csv")) {
+            List<Regione> regioni = new CsvToBeanBuilder<Regione>(reader)
+                    .withType(Regione.class)
+                    .withSeparator(';')
+                    .withSkipLines(1)
+                    .build()
+                    .parse();
+
             regioneRepository.saveAll(regioni);
         } catch (Exception e) {
             e.printStackTrace();
