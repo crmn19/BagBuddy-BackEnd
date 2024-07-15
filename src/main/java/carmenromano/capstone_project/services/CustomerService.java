@@ -25,8 +25,6 @@ public class CustomerService {
     @Autowired
     private PasswordEncoder bcrypt;
 
-    @Autowired
-    private MailgunSender mailgunSender;
 
     public Page<Customer> getCustomers(int pageNumber, int pageSize, String sortBy) {
         if (pageSize > 100) pageSize = 100;
@@ -51,7 +49,6 @@ public class CustomerService {
         customer.setCreatedAt(LocalDate.now());
         Customer saved = customerRepository.save(customer);
 
-        mailgunSender.sendRegistrationEmail(saved);
 
         return saved;
     }

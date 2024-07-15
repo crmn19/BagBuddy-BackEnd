@@ -1,6 +1,5 @@
 package carmenromano.capstone_project.entities;
 
-package carmenromano.capstone_project.entities;
 
 import com.opencsv.bean.CsvBindByPosition;
 import jakarta.persistence.Entity;
