@@ -1,5 +1,6 @@
 package carmenromano.capstone_project.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,22 @@ public class Indirizzo {
     private int cap;
     @OneToOne
     @JoinColumn(nullable = false, unique = false)
+    @JsonIgnore
+    private Customer customer;
+
+
+    @OneToOne
+    @JoinColumn(nullable = false)
     private  Comune comune;
+
+    @Override
+    public String toString() {
+        return "Indirizzo{" +
+                "id=" + id +
+                ", via='" + via + '\'' +
+                ", civico=" + civico +
+                ", cap=" + cap +
+                ", comune=" + comune +
+                '}';
+    }
 }

@@ -2,6 +2,8 @@ package carmenromano.capstone_project.entities;
 
 import carmenromano.capstone_project.enums.GenderUser;
 import carmenromano.capstone_project.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +24,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"password", "role", "authorities", "enabled", "accountNonExpired", "credentialsNonExpired", "accountNonLocked"})
 public class Customer implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -40,14 +43,14 @@ public class Customer implements UserDetails {
     private LocalDate createdAt;
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Address address;
-
+    private Indirizzo indirizzo;
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<OrderProduct> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.getRole().name()));
+        return List.of(new SimpleGrantedAuthority(this.role.name()));
     }
 
     @Override
@@ -75,4 +78,19 @@ public class Customer implements UserDetails {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", dataDiNascita=" + dataDiNascita +
+                ", sesso=" + sesso +
+                ", role=" + role +
+                ", createdAt=" + createdAt +
+                ", orders=" + orders +
+                '}';
+    }
 }

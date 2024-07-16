@@ -42,14 +42,24 @@ public class Comune {
     @CsvBindByPosition(position = 3)
     private String provincia;
 
+
+
     @ManyToOne
-    @JoinColumn(name = "provincia_id")
-    private Provincia provinciaEntity;
+    private Provincia provinciaList;
 
     public Comune(String codiceProvincia, String codiceComune, String name, String provincia) {
         this.codiceProvincia = codiceProvincia;
         this.codiceComune = codiceComune;
         this.name = name;
         this.provincia = provincia;
+    }
+
+    @Override
+    public String toString() {
+        return "Comune{" +
+                "id=" + id +
+                ", codiceProvincia='" + codiceProvincia + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

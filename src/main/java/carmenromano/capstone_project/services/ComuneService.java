@@ -22,9 +22,15 @@ public class ComuneService {
     ProvinciaRepository provinciaRepository;
 
 
-    public List<Comune> findByNameAndProvincia(String name, Provincia provincia){
-        List<Comune> comuneList = new ArrayList<>(comuneRepository.findByNameAndProvincia(name, provincia.getName()));
-        return comuneList;
+
+    public List<Comune> findByNameAndProvincia(String name, Provincia provincia) {
+        List<Comune> comuni = comuneRepository.findByNameAndProvincia(name, provincia.getName());
+
+        if (comuni.isEmpty()) {
+            throw new NotFoundException("Nessun comune trovato con il nome '" + name + "' nella provincia '" + provincia.getName() + "'");
+        }
+
+        return comuni;
     }
 
 

@@ -2,6 +2,7 @@ package carmenromano.capstone_project.services;
 
 
 import carmenromano.capstone_project.entities.Customer;
+import carmenromano.capstone_project.entities.Indirizzo;
 import carmenromano.capstone_project.exceptions.BadRequestException;
 import carmenromano.capstone_project.exceptions.NotFoundException;
 import carmenromano.capstone_project.payload.NewCustomerPayload;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -76,5 +78,15 @@ public class CustomerService {
     public Customer findByEmail(String email){
         return customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
     }
-
+    public Customer uploadIndirizzo(Indirizzo indirizzo, Customer customer) {
+        Customer found = this.findById(customer.getId());
+        indirizzo.setCustomer(found);
+        found.setIndirizzo(indirizzo);
+        return customerRepository.save(found);
+    }
+    public Page<Customer> getAllCustomers(int pageNumber, int pageSize, String sortBy) {
+        if (pageSize > 50) pageSize = 50;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+        return customerRepository.findAll(pageable);
+    }
 }
