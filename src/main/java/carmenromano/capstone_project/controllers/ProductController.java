@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -48,7 +50,13 @@ public class ProductController {
 
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEvent(@PathVariable UUID productId) {
+    public void delete(@PathVariable UUID productId) {
         productService.findByIdAndDelete(productId);
     }
+
+    @PostMapping("/{productId}/avatar")
+    public Product uploadImage(@PathVariable UUID productId, @RequestParam("avatar") MultipartFile image) throws IOException {
+        return this.productService.uploadImage(productId, image);
+    }
+
 }

@@ -28,7 +28,7 @@ public class OrderProduct {
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-    private int price;
+    private double price;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -36,4 +36,5 @@ public class OrderProduct {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
+
 }

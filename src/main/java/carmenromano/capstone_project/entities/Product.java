@@ -1,6 +1,7 @@
 package carmenromano.capstone_project.entities;
 
 import carmenromano.capstone_project.enums.CategoryProduct;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Product {
     private int inMagazzino;
     private String imageUrl;
     private int discount;
+    @Enumerated(EnumType.STRING)
     private CategoryProduct category;
     private LocalDate createdAt;
 
@@ -36,5 +38,6 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     private Cart cart;
 }

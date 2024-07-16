@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private LocalDate date;
-    private int price;
+    private double price;
 
     @Enumerated(EnumType.STRING)
     private CartStatus status;
@@ -32,5 +33,5 @@ public class Cart {
     private Customer customer;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<Product> products;
+    private List<OrderItem> cartItems = new ArrayList<>();
 }
