@@ -18,6 +18,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,6 +35,7 @@ public class Product {
     private LocalDate createdAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<OrderItem> orderItems;
 
     @ManyToOne
