@@ -3,10 +3,8 @@ package carmenromano.capstone_project.services;
 
 import carmenromano.capstone_project.entities.Comune;
 import carmenromano.capstone_project.entities.Provincia;
-import carmenromano.capstone_project.entities.Regione;
 import carmenromano.capstone_project.repositories.ComuneRepository;
 import carmenromano.capstone_project.repositories.ProvinciaRepository;
-import carmenromano.capstone_project.repositories.RegioneRepository;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import jakarta.annotation.PostConstruct;
@@ -25,14 +23,10 @@ public class ImportService {
     @Autowired
     private ProvinciaRepository provinciaRepository;
 
-    @Autowired
-    private RegioneRepository regioneRepository;
-
     @PostConstruct
     public void init() {
         importProvince();
         importComuni();
-        importRegioni();
     }
 
     public void importProvince() {
@@ -61,21 +55,6 @@ public class ImportService {
 
             List<Comune> comuni = csvToBean.parse();
             comuneRepository.saveAll(comuni);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void importRegioni() {
-        try (Reader reader = new FileReader("gi_regioni.csv")) {
-            List<Regione> regioni = new CsvToBeanBuilder<Regione>(reader)
-                    .withType(Regione.class)
-                    .withSeparator(';')
-                    .withSkipLines(1)
-                    .build()
-                    .parse();
-
-            regioneRepository.saveAll(regioni);
         } catch (Exception e) {
             e.printStackTrace();
         }

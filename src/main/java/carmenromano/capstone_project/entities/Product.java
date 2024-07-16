@@ -1,5 +1,6 @@
 package carmenromano.capstone_project.entities;
 
+import carmenromano.capstone_project.enums.CategoryProduct;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,15 +22,14 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
+    private String brand;
     private String description;
     private int price;
-    private boolean stock;
+    private int inMagazzino;
     private String imageUrl;
     private int discount;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private CategoryProduct category;
+    private LocalDate createdAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;

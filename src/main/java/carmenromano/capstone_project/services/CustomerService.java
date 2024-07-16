@@ -84,9 +84,5 @@ public class CustomerService {
         found.setIndirizzo(indirizzo);
         return customerRepository.save(found);
     }
-    public Page<Customer> getAllCustomers(int pageNumber, int pageSize, String sortBy) {
-        if (pageSize > 50) pageSize = 50;
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
-        return customerRepository.findAll(pageable);
-    }
+
 }

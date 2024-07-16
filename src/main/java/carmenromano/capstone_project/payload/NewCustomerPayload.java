@@ -1,6 +1,8 @@
 package carmenromano.capstone_project.payload;
 
 import carmenromano.capstone_project.enums.GenderUser;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +31,7 @@ public record NewCustomerPayload(
         LocalDate dataDiNascita,
 
         @NotNull(message = "Il campo Sesso è obbligatorio!")
+        @Enumerated(EnumType.STRING)
         GenderUser sesso
 
 
