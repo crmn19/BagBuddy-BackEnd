@@ -2,6 +2,7 @@ package carmenromano.capstone_project.entities;
 
 import carmenromano.capstone_project.enums.OrderStatus;
 import carmenromano.capstone_project.enums.PaymentMethod;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,11 @@ public class OrderProduct {
     private Customer customer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<OrderItem> orderItems;
 
+    @OneToOne
+
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 }

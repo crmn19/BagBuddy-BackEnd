@@ -34,7 +34,7 @@ public class CartService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new NotFoundException("Cliente non trovato con ID: " + customerId));
 
-        Cart cart = cartRepository.findByCustomer(customer)
+        Cart cart = cartRepository.findByCustomerAndStatus(customer, CartStatus.ACTIVE)
                 .orElseGet(() -> {
                     Cart newCart = new Cart();
                     newCart.setCustomer(customer);
@@ -72,7 +72,7 @@ public class CartService {
                         item.getProduct().getBrand(),
                         item.getProduct().getDescription(),
                         item.getProduct().getPrice(),
-                        item.getQuantity(), // Includi la quantità nell'OrderItem
+                        item.getQuantity(),
                         item.getProduct().getInMagazzino(),
                         item.getProduct().getImageUrl()
                 ))

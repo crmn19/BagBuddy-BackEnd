@@ -1,6 +1,7 @@
 package carmenromano.capstone_project.entities;
 
 import carmenromano.capstone_project.enums.CartStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,4 +35,8 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<OrderItem> cartItems = new ArrayList<>();
+
+    @OneToOne(mappedBy = "cart")
+@JsonIgnore
+    private OrderProduct orderProduct;
 }
