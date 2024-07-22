@@ -4,9 +4,7 @@ import carmenromano.capstone_project.enums.OrderStatus;
 import carmenromano.capstone_project.enums.PaymentMethod;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -17,6 +15,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
+@Data
 public class OrderProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,7 +29,15 @@ public class OrderProduct {
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+
     private double price;
+
+    private String currency;
+    private String method;
+    private String intent;
+    private String description;
+
+
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

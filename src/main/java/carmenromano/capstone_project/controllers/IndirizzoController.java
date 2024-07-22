@@ -36,7 +36,7 @@ public class IndirizzoController {
                                     @AuthenticationPrincipal Customer cliente) throws IOException {
 
         Customer clienteFound = customerService.findById(cliente.getId());
-        Indirizzo indirizzo = indirizzoService.save(body, clienteFound.getId()); // Passa l'ID del cliente a IndirizzoService.save()
+        Indirizzo indirizzo = indirizzoService.save(body, clienteFound.getId());
         return customerService.uploadIndirizzo(indirizzo, clienteFound);
     }
 
