@@ -2,8 +2,10 @@ package carmenromano.capstone_project.services;
 
 
 import carmenromano.capstone_project.entities.Comune;
+import carmenromano.capstone_project.entities.Product;
 import carmenromano.capstone_project.entities.Provincia;
 import carmenromano.capstone_project.repositories.ComuneRepository;
+import carmenromano.capstone_project.repositories.ProductRepository;
 import carmenromano.capstone_project.repositories.ProvinciaRepository;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -21,12 +23,15 @@ public class ImportService {
     private ComuneRepository comuneRepository;
 
     @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private ProvinciaRepository provinciaRepository;
 
     @PostConstruct
     public void init() {
-        importProvince();
-        importComuni();
+      // importProvince();
+   //  importComuni();
     }
 
     public void importProvince() {
@@ -59,5 +64,6 @@ public class ImportService {
             e.printStackTrace();
         }
     }
+
 }
 

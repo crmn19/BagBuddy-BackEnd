@@ -12,6 +12,7 @@ import carmenromano.capstone_project.services.ComuneService;
 import carmenromano.capstone_project.services.CustomerService;
 import carmenromano.capstone_project.services.IndirizzoService;
 import carmenromano.capstone_project.services.ProvinciaService;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,14 +32,19 @@ public class IndirizzoController {
     CustomerService customerService;
     @Autowired
     IndirizzoService indirizzoService;
-    @PostMapping
+    @PostMapping("/create")
+
+
     public Customer createIndirizzo(@RequestBody IndirizzoPayload body,
                                     @AuthenticationPrincipal Customer cliente) throws IOException {
-
-        Customer clienteFound = customerService.findById(cliente.getId());
-        Indirizzo indirizzo = indirizzoService.save(body, clienteFound.getId());
-        return customerService.uploadIndirizzo(indirizzo, clienteFound);
+        Indirizzo indirizzo;
+        try {
+            indirizzo = indirizzoService.save(body, cliente.getId());
+        } catch (IOException e) {
+            throw new BadRequestException("Errore durante il salvataggio dell'indirizzo: " + e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage(), e);
+        }
+        return customerService.uploadIndirizzo(indirizzo, cliente);
     }
-
-
 }

@@ -34,9 +34,10 @@ public class Cart {
     private Customer customer;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<OrderItem> cartItems = new ArrayList<>();
 
     @OneToOne(mappedBy = "cart")
-@JsonIgnore
+    @JsonIgnore
     private OrderProduct orderProduct;
 }

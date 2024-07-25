@@ -10,6 +10,8 @@ import java.util.UUID;
 
 @Repository
 public interface ComuneRepository extends JpaRepository<Comune, UUID> {
-    List<Comune> findByProvincia(String provincia);
     List<Comune> findByNameAndProvincia(String name, String provincia);
+    List<Comune> findByCodiceProvincia(String codiceProvincia);
+    Comune findByName(String nome);
+
 }

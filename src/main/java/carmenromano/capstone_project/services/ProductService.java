@@ -2,6 +2,7 @@ package carmenromano.capstone_project.services;
 
 import carmenromano.capstone_project.entities.Customer;
 import carmenromano.capstone_project.entities.Product;
+import carmenromano.capstone_project.enums.CategoryProduct;
 import carmenromano.capstone_project.exceptions.BadRequestException;
 import carmenromano.capstone_project.exceptions.NotFoundException;
 import carmenromano.capstone_project.payload.NewCustomerPayload;
@@ -30,10 +31,28 @@ public class ProductService {
     @Autowired
     private Cloudinary cloudinaryUploader;
 
-    public Page<Product> getProduct(int pageNumber, int pageSize, String sortBy) {
+    public Page<Product> getProduct(int pageNumber, int pageSize, String sortBy, String category, String search) {
         if (pageSize > 100) pageSize = 100;
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
-        return productRepository.findAll(pageable);
+        CategoryProduct categoryProduct = null;
+        try {
+            if (category != null && !category.isEmpty()) {
+                categoryProduct = CategoryProduct.valueOf(category);
+            }
+        } catch (IllegalArgumentException e) {
+            categoryProduct = null;
+        }
+
+
+        if (search != null && !search.isEmpty() ) {
+            return productRepository.findByNameContainingIgnoreCase(search, pageable);
+        } else if (categoryProduct != null) {
+            return productRepository.findByCategory(categoryProduct, pageable);
+        } else {
+            return productRepository.findAll(pageable);
+        }
+
+
     }
     public Product save(ProductPayload body) {
         Product product = new Product();

@@ -1,29 +1,29 @@
 package carmenromano.capstone_project.controllers;
 
-import carmenromano.capstone_project.entities.Cart;
 import carmenromano.capstone_project.entities.Customer;
-import carmenromano.capstone_project.entities.Product;
-import carmenromano.capstone_project.exceptions.NotFoundException;
 import carmenromano.capstone_project.payload.CartResponsePayload;
+import carmenromano.capstone_project.payload.OrderCustomerPayload;
+import carmenromano.capstone_project.repositories.CartRepository;
 import carmenromano.capstone_project.services.CartService;
 import carmenromano.capstone_project.services.CustomerService;
+import carmenromano.capstone_project.services.OrderProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
-    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
     @Autowired
     private CartService cartService;
+    @Autowired
+    private CartRepository cartRepository;
+    @Autowired
+    private OrderProductService orderProductService;
 
     @Autowired
     private CustomerService customerService;
@@ -31,11 +31,8 @@ public class CustomerController {
     @GetMapping("/me")
     public Customer getProfile(@AuthenticationPrincipal Customer currentAuthenticatedUser) {
         if (currentAuthenticatedUser == null) {
-            logger.error("No authenticated customer found");
             throw new RuntimeException("Authenticated customer not found");
         }
-        logger.info("Authenticated customer: " + currentAuthenticatedUser.getEmail());
-
         return currentAuthenticatedUser;
     }
     @GetMapping("/{customerId}")
@@ -58,9 +55,26 @@ public class CustomerController {
 
     @PostMapping("/add/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public CartResponsePayload addToCart(@AuthenticationPrincipal Customer currentAuthenticatedUser,
-                                         @PathVariable UUID productId) {
+    public List<CartResponsePayload> addToCart(@AuthenticationPrincipal Customer currentAuthenticatedUser,
+                                               @PathVariable UUID productId) {
         return cartService.aggiungiAlCarrello(currentAuthenticatedUser.getId(), productId);
+    }
+
+    @PostMapping("/remove/{productId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<CartResponsePayload> removeToCart(@AuthenticationPrincipal Customer currentAuthenticatedUser,
+                                               @PathVariable UUID productId) {
+        return cartService.rimuoviDalCarrello(currentAuthenticatedUser.getId(), productId);
+    }
+    @GetMapping("/ordini")
+    public List<OrderCustomerPayload> getOrdersByCustomerId(@AuthenticationPrincipal Customer currentAuthenticatedUser) {
+        UUID customerId = currentAuthenticatedUser.getId();
+        return orderProductService.getOrdersByCustomer(customerId);
+    }
+
+    @GetMapping("/cart")
+    public List<CartResponsePayload> getCarts(@AuthenticationPrincipal Customer currentAuthenticatedUser) {
+        return cartService.getActiveCarts(currentAuthenticatedUser.getId());
     }
     }
 

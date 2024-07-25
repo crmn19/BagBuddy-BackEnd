@@ -6,6 +6,7 @@ import carmenromano.capstone_project.entities.Indirizzo;
 import carmenromano.capstone_project.entities.Provincia;
 import carmenromano.capstone_project.exceptions.NotFoundException;
 import carmenromano.capstone_project.payload.IndirizzoPayload;
+import carmenromano.capstone_project.repositories.ComuneRepository;
 import carmenromano.capstone_project.repositories.CustomerRepository;
 import carmenromano.capstone_project.repositories.IndirizzoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,30 +21,41 @@ public class IndirizzoService {
     @Autowired
     private IndirizzoRepository indirizzoRepository;
     @Autowired
-    private ComuneService comuneService;
-    @Autowired
     private ProvinciaService provinciaService;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private CustomerService customerService;
+    @Autowired
+    private ComuneService comuneService;
 
+    public Indirizzo save(IndirizzoPayload payload, UUID customerId) throws IOException {
+        Provincia provincia = provinciaService.findByName(payload.provincia());
+        if (provincia == null) {
+            throw new IOException("Provincia non trovata con il nome: " + payload.provincia());
+        }
 
-    public Indirizzo save(IndirizzoPayload body, UUID customerId) throws IOException {
+        Customer customer = customerService.findById(customerId);
+        if (customer == null) {
+            throw new IOException("Cliente non trovato con ID: " + customerId);
+        }
+
+        Comune comune = comuneService.findByName(payload.comune());
+        if (comune == null) {
+            throw new IOException("Comune non trovato con il nome: " + payload.comune());
+        }
         Indirizzo indirizzo = new Indirizzo();
-        indirizzo.setVia(body.via());
-        indirizzo.setCivico(body.civico());
-        indirizzo.setCap(body.cap());
-
-        Provincia provinciafound = provinciaService.findByName(body.provincia());
-        List<Comune> comunes = comuneService.findByNameAndProvincia(body.comune(), provinciafound);
-        indirizzo.setComune(comunes.get(0));
-
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundException("Customer non trovato con ID: " + customerId));
-
+        indirizzo.setVia(payload.via());
+        indirizzo.setCivico(payload.civico());
+        indirizzo.setCap(payload.cap());
+        indirizzo.setProvincia(provincia);
+        indirizzo.setComune(comune);
         indirizzo.setCustomer(customer);
 
         return indirizzoRepository.save(indirizzo);
     }
+
+
     public Indirizzo findById(Long id) {
         return indirizzoRepository.findById(id).orElseThrow(() -> new NotFoundException("Nessun indirizzo è stato trovato con l'id: " + id));
     }

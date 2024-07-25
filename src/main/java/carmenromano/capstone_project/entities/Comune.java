@@ -42,9 +42,8 @@ public class Comune {
     @CsvBindByPosition(position = 3)
     private String provincia;
 
-
-
     @ManyToOne
+    @JoinColumn(name = "provincia_id")
     private Provincia provinciaList;
 
     public Comune(String codiceProvincia, String codiceComune, String name, String provincia) {
@@ -63,3 +62,4 @@ public class Comune {
                 '}';
     }
 }
+

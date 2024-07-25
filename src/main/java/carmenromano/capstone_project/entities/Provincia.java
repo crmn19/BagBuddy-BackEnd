@@ -32,7 +32,7 @@ public class Provincia {
 
 
 
-    public Provincia(String codiceRegione, String sigla, String name, String tipologia, int numeroComuni, double superficie, String codiceSovracomunale) {
+    public Provincia(String codiceRegione, String sigla, String name) {
         this.codiceRegione = codiceRegione;
         this.sigla = sigla;
         this.name = name;

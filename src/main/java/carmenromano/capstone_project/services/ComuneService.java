@@ -25,21 +25,22 @@ public class ComuneService {
 
     public List<Comune> findByNameAndProvincia(String name, Provincia provincia) {
         List<Comune> comuni = comuneRepository.findByNameAndProvincia(name, provincia.getName());
-
         if (comuni.isEmpty()) {
             throw new NotFoundException("Nessun comune trovato con il nome '" + name + "' nella provincia '" + provincia.getName() + "'");
         }
-
         return comuni;
     }
 
-
-    public List<Comune> findByProvinciaId(UUID provinciaId){
+    public List<Comune> findByProvinciaId(UUID provinciaId) {
         Optional<Provincia> provincia = provinciaRepository.findById(provinciaId);
         if (provincia.isPresent()) {
-            return comuneRepository.findByProvincia(provincia.get().getName());
+            return comuneRepository.findByCodiceProvincia(provincia.get().getSigla());
         } else {
             throw new NotFoundException("Provincia non trovata");
         }
     }
+    public Comune findByName(String nome) {
+        return comuneRepository.findByName(nome);
+    }
+
 }

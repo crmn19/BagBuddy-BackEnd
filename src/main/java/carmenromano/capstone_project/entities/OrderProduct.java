@@ -15,7 +15,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @Data
 public class OrderProduct {
     @Id
@@ -26,6 +25,7 @@ public class OrderProduct {
     private OrderStatus status = OrderStatus.PENDING;
 
     private LocalDate createdAt;
+
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
@@ -41,14 +41,30 @@ public class OrderProduct {
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
+    @JsonIgnore
     private Customer customer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<OrderItem> orderItems;
 
-    @OneToOne
 
+    @OneToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
+    @Override
+    public String toString() {
+        return "OrderProduct{" +
+                "id=" + id +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", paymentMethod=" + paymentMethod +
+                ", price=" + price +
+                ", currency='" + currency + '\'' +
+                ", method='" + method + '\'' +
+                ", intent='" + intent + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
 }

@@ -1,5 +1,6 @@
 package carmenromano.capstone_project.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class OrderItem {
     private Cart cart;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "order_product_id")
     private OrderProduct order;
 

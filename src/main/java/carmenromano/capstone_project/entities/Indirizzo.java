@@ -27,7 +27,9 @@ public class Indirizzo {
     @OneToOne
     @JoinColumn(nullable = false)
     private  Comune comune;
-
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private Provincia provincia; //
     @Override
     public String toString() {
         return "Indirizzo{" +
