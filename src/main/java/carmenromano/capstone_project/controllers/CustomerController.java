@@ -1,6 +1,7 @@
 package carmenromano.capstone_project.controllers;
 
 import carmenromano.capstone_project.entities.Customer;
+import carmenromano.capstone_project.entities.Product;
 import carmenromano.capstone_project.payload.CartResponsePayload;
 import carmenromano.capstone_project.payload.OrderCustomerPayload;
 import carmenromano.capstone_project.repositories.CartRepository;
@@ -8,6 +9,7 @@ import carmenromano.capstone_project.services.CartService;
 import carmenromano.capstone_project.services.CustomerService;
 import carmenromano.capstone_project.services.OrderProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,10 @@ public class CustomerController {
             throw new RuntimeException("Authenticated customer not found");
         }
         return currentAuthenticatedUser;
+    }
+    @GetMapping
+    public Page<Customer> getProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "4") int size, @RequestParam(defaultValue = "id") String sortBy) {
+        return this.customerService.getCustomers(page, size, sortBy);
     }
     @GetMapping("/{customerId}")
     public Customer findById(@PathVariable UUID customerId) {

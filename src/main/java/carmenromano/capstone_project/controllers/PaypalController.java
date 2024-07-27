@@ -1,7 +1,7 @@
 package carmenromano.capstone_project.controllers;
 
 import carmenromano.capstone_project.entities.OrderProduct;
-import carmenromano.capstone_project.payload.PaypalService;
+import carmenromano.capstone_project.services.PaypalService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
@@ -34,16 +34,17 @@ public class PaypalController {
                     orderProduct.getMethod(),
                     orderProduct.getIntent(),
                     orderProduct.getDescription(),
-                    "http://localhost:5173/" + CANCEL_URL,
-                    "http://localhost:5173/" + SUCCESS_URL);
+                    "http://localhost:5173/pay/cancel",
+                    "http://localhost:5173/pay/success");
 
-            for (Links links : payment.getLinks()) {
+            for (Links links:payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
                     return "redirect:" + links.getHref();
                 }
             }
         } catch (PayPalRESTException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error occurred during payment creation: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return "redirect:/";

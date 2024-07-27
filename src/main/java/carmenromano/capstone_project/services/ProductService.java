@@ -82,7 +82,7 @@ public class ProductService {
         found.setInMagazzino(modifiedProduct.getInMagazzino());
         found.setImageUrl("https://ui-avatars.com/api/?name=" + modifiedProduct.getName() + "+" + modifiedProduct.getBrand());
         found.setCreatedAt(LocalDate.now());
-        found.setDiscount(0);
+        found.setDiscount(modifiedProduct.getDiscount());
         return this.productRepository.save(found);
     }
     public void findByIdAndDelete(UUID productId) {

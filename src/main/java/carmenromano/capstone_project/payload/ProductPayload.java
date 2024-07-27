@@ -2,6 +2,7 @@ package carmenromano.capstone_project.payload;
 
 import carmenromano.capstone_project.enums.CategoryProduct;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -30,5 +31,8 @@ public record ProductPayload (
 
         @NotNull(message = "La categoria del prodotto è obbligatoria!")
         @Enumerated(EnumType.STRING)
-        CategoryProduct categoryProduct
+        CategoryProduct categoryProduct,
+
+          @Nullable
+int priceDiscount
 ) {}

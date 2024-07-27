@@ -1,4 +1,4 @@
-package carmenromano.capstone_project.payload;
+package carmenromano.capstone_project.services;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
@@ -27,8 +27,10 @@ public class PaypalService {
             String sucessUrl) throws PayPalRESTException{
         Amount amount = new Amount();
         amount.setCurrency(currency);
+
         total = new BigDecimal(total).setScale(2, RoundingMode.HALF_UP).doubleValue();
         amount.setTotal(String.format("%.2f", total));
+        amount.setTotal(total.toString());
 
         Transaction transaction = new Transaction();
         transaction.setDescription(description);
@@ -38,10 +40,10 @@ public class PaypalService {
         transactions.add(transaction);
 
         Payer payer = new Payer();
-        payer.setPaymentMethod(method.toString());
+        payer.setPaymentMethod(method);
 
         Payment payment = new Payment();
-        payment.setIntent(intent.toString());
+        payment.setIntent(intent);
         payment.setPayer(payer);
         payment.setTransactions(transactions);
         RedirectUrls redirectUrls = new RedirectUrls();
@@ -54,8 +56,9 @@ public class PaypalService {
     }
 
     public  Payment executePayment(String paymentId,String payerId)throws  PayPalRESTException{
+
         Payment payment = new Payment();
-        payment.setId(payerId);
+        payment.setId(paymentId);
         PaymentExecution paymentExecution = new PaymentExecution();
         paymentExecution.setPayerId(payerId);
         return payment.execute(apiContext,paymentExecution);

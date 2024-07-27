@@ -60,6 +60,10 @@ public class IndirizzoService {
         return indirizzoRepository.findById(id).orElseThrow(() -> new NotFoundException("Nessun indirizzo è stato trovato con l'id: " + id));
     }
 
+    public Indirizzo findByCustomer(Customer customer) {
+        return indirizzoRepository.findByCustomer(customer);
+    }
+
     public void findByIdAndDelete(Long id) {
         Indirizzo found = this.findById(id);
         indirizzoRepository.delete(found);

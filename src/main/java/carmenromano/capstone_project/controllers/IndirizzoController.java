@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,8 +30,6 @@ public class IndirizzoController {
     @Autowired
     IndirizzoService indirizzoService;
     @PostMapping("/create")
-
-
     public Customer createIndirizzo(@RequestBody IndirizzoPayload body,
                                     @AuthenticationPrincipal Customer cliente) throws IOException {
         Indirizzo indirizzo;
@@ -46,5 +41,10 @@ public class IndirizzoController {
             throw new BadRequestException(e.getMessage(), e);
         }
         return customerService.uploadIndirizzo(indirizzo, cliente);
+    }
+
+    @GetMapping("/find")
+    public Indirizzo findByCustomer(@AuthenticationPrincipal Customer cliente){
+        return indirizzoService.findByCustomer( cliente);
     }
 }
