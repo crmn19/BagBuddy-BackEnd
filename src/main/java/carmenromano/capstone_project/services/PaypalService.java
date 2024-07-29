@@ -25,6 +25,7 @@ public class PaypalService {
             String description,
             String cancelUrl,
             String sucessUrl) throws PayPalRESTException{
+
         Amount amount = new Amount();
         amount.setCurrency(currency);
 
@@ -50,7 +51,6 @@ public class PaypalService {
         redirectUrls.setCancelUrl(cancelUrl);
         redirectUrls.setReturnUrl(sucessUrl);
         payment.setRedirectUrls(redirectUrls);
-
         return payment.create(apiContext);
 
     }

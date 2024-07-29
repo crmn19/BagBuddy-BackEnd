@@ -1,10 +1,9 @@
 package carmenromano.capstone_project.services;
 
 
-import carmenromano.capstone_project.entities.Cart;
-import carmenromano.capstone_project.entities.Customer;
-import carmenromano.capstone_project.entities.OrderProduct;
+import carmenromano.capstone_project.entities.*;
 import carmenromano.capstone_project.enums.CartStatus;
+import carmenromano.capstone_project.enums.CategoryProduct;
 import carmenromano.capstone_project.enums.OrderStatus;
 import carmenromano.capstone_project.payload.OrderCustomerPayload;
 import carmenromano.capstone_project.payload.OrderItemResponsePayload;
@@ -12,26 +11,14 @@ import carmenromano.capstone_project.payload.OrderResponsePayload;
 import carmenromano.capstone_project.repositories.CartRepository;
 import carmenromano.capstone_project.repositories.OrderProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import carmenromano.capstone_project.entities.Cart;
-import carmenromano.capstone_project.entities.Customer;
-import carmenromano.capstone_project.entities.OrderItem;
-import carmenromano.capstone_project.entities.OrderProduct;
-import carmenromano.capstone_project.enums.CartStatus;
-import carmenromano.capstone_project.enums.OrderStatus;
-import carmenromano.capstone_project.payload.OrderResponsePayload;
-import carmenromano.capstone_project.repositories.CartRepository;
-import carmenromano.capstone_project.repositories.OrderProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,9 +33,25 @@ public class OrderProductService {
     @Autowired
     private CartRepository cartRepository;
 
+    public Page<OrderProduct> getOrders(int pageNumber, int pageSize, String sortBy) {
+        if (pageSize > 100) pageSize = 100;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+        return orderProductRepository.findAll(pageable);
+    }
+
+
+
     public List<OrderProduct> getAllOrders() {
         return orderProductRepository.findAll();
     }
+
+    public double venditeTotaliPerAnno(int anno) {
+        return getAllOrders().stream()
+                .filter(order -> order.getCreatedAt().getYear() == anno)
+                .mapToDouble(OrderProduct::getPrice)
+                .sum();
+    }
+
 
     public OrderResponsePayload createOrder(UUID cartId, Customer customer) {
         Cart cart = cartRepository.findById(cartId)

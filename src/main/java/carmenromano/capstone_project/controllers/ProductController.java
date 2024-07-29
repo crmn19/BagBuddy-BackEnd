@@ -29,6 +29,7 @@ public class ProductController {
     public Page<Product> getProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "4") int size, @RequestParam(defaultValue = "id") String sortBy,@RequestParam(required = false) String category,  @RequestParam(required = false)  String search) {
         return this.productService.getProduct(page, size, sortBy, category, search);
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Product createProduct(@RequestBody @Validated ProductPayload productPayload, BindingResult validation) throws IOException {

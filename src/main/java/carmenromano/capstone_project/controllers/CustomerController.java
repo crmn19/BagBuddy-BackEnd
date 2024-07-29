@@ -82,6 +82,8 @@ public class CustomerController {
     public List<CartResponsePayload> getCarts(@AuthenticationPrincipal Customer currentAuthenticatedUser) {
         return cartService.getActiveCarts(currentAuthenticatedUser.getId());
     }
+
+
     }
 
 

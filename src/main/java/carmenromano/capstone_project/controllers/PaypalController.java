@@ -7,12 +7,10 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+//@RequestMapping("/paypal")
 public class PaypalController {
     @Autowired
     PaypalService paypalService;
@@ -22,7 +20,7 @@ public class PaypalController {
 
     @GetMapping("/")
     public String home() {
-        return "home";
+        return "";
     }
 
     @PostMapping("/pay")
@@ -36,7 +34,7 @@ public class PaypalController {
                     orderProduct.getDescription(),
                     "http://localhost:5173/pay/cancel",
                     "http://localhost:5173/pay/success");
-
+            System.out.println(payment.getLinks());
             for (Links links:payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
                     return "redirect:" + links.getHref();
@@ -46,8 +44,8 @@ public class PaypalController {
             System.err.println("Error occurred during payment creation: " + e.getMessage());
             e.printStackTrace();
         }
+        return "";
 
-        return "redirect:/";
     }
 
     @GetMapping(value = CANCEL_URL)
