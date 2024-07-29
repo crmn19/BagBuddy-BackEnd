@@ -3,10 +3,13 @@ package carmenromano.capstone_project.controllers;
 import carmenromano.capstone_project.entities.Customer;
 import carmenromano.capstone_project.entities.OrderProduct;
 import carmenromano.capstone_project.entities.Product;
+import carmenromano.capstone_project.payload.OrderCustomerPayload;
+import carmenromano.capstone_project.payload.OrderProductPaypalPayload;
 import carmenromano.capstone_project.payload.OrderResponsePayload;
 import carmenromano.capstone_project.services.OrderProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +35,17 @@ public class OrderController {
     public double getTotalSalesForYear(@PathVariable int year) {
         return orderService.venditeTotaliPerAnno(year);
     }
+
+    @GetMapping("/customer")
+    public ResponseEntity<List<OrderCustomerPayload>> getOrdersByCustomer(
+            @AuthenticationPrincipal Customer currentAuthenticatedUser) {
+        List<OrderCustomerPayload> orders = orderService.getOrdersByCustomer(currentAuthenticatedUser.getId());
+        return ResponseEntity.ok(orders);
+    }
+    @PutMapping("/{orderId}")
+    public OrderProduct findByIdAndUpdate(@PathVariable UUID orderId, @RequestBody OrderProductPaypalPayload body) {
+        return orderService.findByIdAndUpdate(orderId, body);
+    }
+
 
 }

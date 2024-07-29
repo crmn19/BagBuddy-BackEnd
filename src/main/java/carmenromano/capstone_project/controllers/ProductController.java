@@ -60,4 +60,5 @@ public class ProductController {
         return this.productService.uploadImage(productId, image);
     }
 
+
 }

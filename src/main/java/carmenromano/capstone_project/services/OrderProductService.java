@@ -5,8 +5,11 @@ import carmenromano.capstone_project.entities.*;
 import carmenromano.capstone_project.enums.CartStatus;
 import carmenromano.capstone_project.enums.CategoryProduct;
 import carmenromano.capstone_project.enums.OrderStatus;
+import carmenromano.capstone_project.enums.PaymentMethod;
+import carmenromano.capstone_project.exceptions.NotFoundException;
 import carmenromano.capstone_project.payload.OrderCustomerPayload;
 import carmenromano.capstone_project.payload.OrderItemResponsePayload;
+import carmenromano.capstone_project.payload.OrderProductPaypalPayload;
 import carmenromano.capstone_project.payload.OrderResponsePayload;
 import carmenromano.capstone_project.repositories.CartRepository;
 import carmenromano.capstone_project.repositories.OrderProductRepository;
@@ -108,5 +111,32 @@ public class OrderProductService {
 
             return new OrderCustomerPayload(order.getId(), order.getStatus(), products);
         }).collect(Collectors.toList());
+    }
+
+    public void updateOrderStatus(String orderId, OrderStatus status, String paymentId) {
+        OrderProduct order = orderProductRepository.findById(UUID.fromString(orderId))
+                .orElseThrow(() -> new RuntimeException("Ordine non trovato"));
+
+        order.setStatus(status);
+        order.setDescription(paymentId);
+        order.setPaymentMethod(PaymentMethod.PAYPAL);
+        order.setMethod("paypal");
+        order.setIntent("sale");
+
+        orderProductRepository.save(order);
+    }
+    public OrderProduct findById(UUID orderId) {
+        return this.orderProductRepository.findById(orderId).orElseThrow(() -> new NotFoundException(orderId));
+    }
+    public OrderProduct findByIdAndUpdate(UUID orderId, OrderProductPaypalPayload modifiedProduct) {
+        OrderProduct found = this.findById(orderId);
+        found.setMethod(modifiedProduct.method());
+        found.setCurrency(modifiedProduct.currency());
+        found.setIntent(modifiedProduct.intent());
+        found.setPrice(modifiedProduct.amount());
+        found.setDescription(modifiedProduct.description());
+        found.setStatus(OrderStatus.COMPLETED);
+        found.setPaymentMethod(PaymentMethod.PAYPAL);
+        return this.orderProductRepository.save(found);
     }
 }
