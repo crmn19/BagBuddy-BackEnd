@@ -135,7 +135,7 @@ public class OrderProductService {
         found.setIntent(modifiedProduct.intent());
         found.setPrice(modifiedProduct.amount());
         found.setDescription(modifiedProduct.description());
-        found.setStatus(OrderStatus.COMPLETED);
+        found.setStatus(OrderStatus.AWAITING_SHIPMENT);
         found.setPaymentMethod(PaymentMethod.PAYPAL);
         return this.orderProductRepository.save(found);
     }

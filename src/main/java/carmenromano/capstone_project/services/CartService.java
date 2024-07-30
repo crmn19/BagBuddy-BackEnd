@@ -128,8 +128,15 @@ public class CartService {
                     .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                     .sum();
             cart.setPrice(totalPrice);
-            cartRepository.save(cart);
+            if (cart.getCartItems().isEmpty()) {
+                cartRepository.delete(cart);
+            } else {
+                cartRepository.save(cart);
+            }
         }
+
+
+
 
         List<CartResponsePayload> cartResponsePayloads = carts.stream()
                 .map(cart -> {
