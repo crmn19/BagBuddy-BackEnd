@@ -24,7 +24,7 @@ import java.util.UUID;
 public class OrderController {
     @Autowired
     private OrderProductService orderService;
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @PostMapping("/{cartId}")
     public OrderResponsePayload createOrder(@PathVariable UUID cartId, @AuthenticationPrincipal Customer currentAuthenticatedUser) {
 
@@ -46,12 +46,12 @@ public class OrderController {
         List<OrderCustomerPayload> orders = orderService.getOrdersByCustomer(currentAuthenticatedUser.getId());
         return ResponseEntity.ok(orders);
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @PutMapping("/{orderId}")
     public OrderProduct findByIdAndUpdate(@PathVariable UUID orderId, @RequestBody OrderProductPaypalPayload body) {
         return orderService.findByIdAndUpdate(orderId, body);
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @PutMapping("/status/{orderId}")
     public OrderProduct findByIdAndUpdate(@PathVariable UUID orderId, @RequestBody OrderStatus orderStatus) {
         return orderService.findByIdAndUpdateStatus(orderId, orderStatus);
