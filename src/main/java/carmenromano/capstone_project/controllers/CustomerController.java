@@ -4,6 +4,7 @@ import carmenromano.capstone_project.entities.Customer;
 import carmenromano.capstone_project.entities.Product;
 import carmenromano.capstone_project.payload.CartResponsePayload;
 import carmenromano.capstone_project.payload.OrderCustomerPayload;
+import carmenromano.capstone_project.payload.PasswordResetPayload;
 import carmenromano.capstone_project.repositories.CartRepository;
 import carmenromano.capstone_project.services.CartService;
 import carmenromano.capstone_project.services.CustomerService;
@@ -49,6 +50,11 @@ public class CustomerController {
     @PutMapping("/{customerId}")
     public Customer findByIdAndUpdate(@PathVariable UUID customerId, @RequestBody Customer body) {
         return customerService.findByIdAndUpdate(customerId, body);
+    }
+
+    @PutMapping("/password")
+    public Customer findByIdAndUpdatePassword(@AuthenticationPrincipal Customer currentAuthenticatedUser, @RequestBody PasswordResetPayload body) {
+        return customerService.findByIdAndUpdatePassword(currentAuthenticatedUser.getId(), body);
     }
 
 

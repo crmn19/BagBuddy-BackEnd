@@ -1,8 +1,4 @@
 package carmenromano.capstone_project.controllers;
-
-import carmenromano.capstone_project.entities.OrderProduct;
-import carmenromano.capstone_project.enums.OrderStatus;
-import carmenromano.capstone_project.payload.IndirizzoPayload;
 import carmenromano.capstone_project.payload.OrderProductPaypalPayload;
 import carmenromano.capstone_project.services.OrderProductService;
 import carmenromano.capstone_project.services.PaypalService;
@@ -61,25 +57,32 @@ public class PaypalController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "Impossibile ottenere l'URL di approvazione."));
     }
 
-
-
     @GetMapping(value = CANCEL_URL)
     public String cancelPay() {
         return "cancel";
     }
 
     @GetMapping(value = SUCCESS_URL)
-    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+    public ResponseEntity<Map<String, String>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+        Map<String, String> response = new HashMap<>();
         try {
             Payment payment = paypalService.executePayment(paymentId, payerId);
             System.out.println(payment.toJSON());
             if (payment.getState().equals("approved")) {
-                return "success";
+                response.put("status", "success");
+                response.put("message", "Payment approved");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("status", "failure");
+                response.put("message", "Payment not approved");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
         } catch (PayPalRESTException e) {
-            System.out.println(e.getMessage());
+            response.put("status", "error");
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return "redirect:/";
     }
+
 
 }

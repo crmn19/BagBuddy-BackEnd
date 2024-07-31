@@ -139,4 +139,10 @@ public class OrderProductService {
         found.setPaymentMethod(PaymentMethod.PAYPAL);
         return this.orderProductRepository.save(found);
     }
+
+    public OrderProduct findByIdAndUpdateStatus(UUID orderId, OrderStatus orderStatus) {
+        OrderProduct found = this.findById(orderId);
+        found.setStatus(orderStatus);
+        return this.orderProductRepository.save(found);
+    }
 }

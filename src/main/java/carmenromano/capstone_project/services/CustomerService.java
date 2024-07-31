@@ -6,6 +6,7 @@ import carmenromano.capstone_project.entities.Indirizzo;
 import carmenromano.capstone_project.exceptions.BadRequestException;
 import carmenromano.capstone_project.exceptions.NotFoundException;
 import carmenromano.capstone_project.payload.NewCustomerPayload;
+import carmenromano.capstone_project.payload.PasswordResetPayload;
 import carmenromano.capstone_project.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,13 +63,28 @@ public class CustomerService {
     public Customer findByIdAndUpdate(UUID userId, Customer modifiedCustomer) {
         Customer found = this.findById(userId);
         found.setEmail(modifiedCustomer.getEmail());
-        found.setPassword(bcrypt.encode(modifiedCustomer.getPassword()));
         found.setNome(modifiedCustomer.getNome());
         found.setCognome(modifiedCustomer.getCognome());
         found.setDataDiNascita(modifiedCustomer.getDataDiNascita());
         found.setSesso(modifiedCustomer.getSesso());
         return this.customerRepository.save(found);
     }
+    public Customer findByIdAndUpdatePassword(UUID userId, PasswordResetPayload passwordResetPayload) {
+        Customer found = this.findById(userId);
+        if (found == null) {
+            throw new NotFoundException("Customer not found");
+        }
+        if (!bcrypt.matches(passwordResetPayload.oldPassword(), found.getPassword())) {
+            throw new IllegalArgumentException("The old password is incorrect.");
+        }
+        if (passwordResetPayload.newPassword() == null || passwordResetPayload.newPassword().isEmpty()) {
+            throw new IllegalArgumentException("New password cannot be null or empty.");
+        }
+        found.setPassword(bcrypt.encode(passwordResetPayload.newPassword()));
+        return this.customerRepository.save(found);
+    }
+
+
 
     public void findByIdAndDelete(UUID userId) {
         Customer found = this.findById(userId);

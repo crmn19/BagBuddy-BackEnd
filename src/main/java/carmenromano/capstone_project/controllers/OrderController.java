@@ -3,6 +3,7 @@ package carmenromano.capstone_project.controllers;
 import carmenromano.capstone_project.entities.Customer;
 import carmenromano.capstone_project.entities.OrderProduct;
 import carmenromano.capstone_project.entities.Product;
+import carmenromano.capstone_project.enums.OrderStatus;
 import carmenromano.capstone_project.payload.OrderCustomerPayload;
 import carmenromano.capstone_project.payload.OrderProductPaypalPayload;
 import carmenromano.capstone_project.payload.OrderResponsePayload;
@@ -45,6 +46,11 @@ public class OrderController {
     @PutMapping("/{orderId}")
     public OrderProduct findByIdAndUpdate(@PathVariable UUID orderId, @RequestBody OrderProductPaypalPayload body) {
         return orderService.findByIdAndUpdate(orderId, body);
+    }
+
+    @PutMapping("/status/{orderId}")
+    public OrderProduct findByIdAndUpdate(@PathVariable UUID orderId, @RequestBody OrderStatus orderStatus) {
+        return orderService.findByIdAndUpdateStatus(orderId, orderStatus);
     }
 
 
