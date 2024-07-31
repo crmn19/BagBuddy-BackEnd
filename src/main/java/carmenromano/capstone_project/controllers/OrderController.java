@@ -10,7 +10,9 @@ import carmenromano.capstone_project.payload.OrderResponsePayload;
 import carmenromano.capstone_project.services.OrderProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,7 @@ import java.util.UUID;
 public class OrderController {
     @Autowired
     private OrderProductService orderService;
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{cartId}")
     public OrderResponsePayload createOrder(@PathVariable UUID cartId, @AuthenticationPrincipal Customer currentAuthenticatedUser) {
 
@@ -43,15 +46,25 @@ public class OrderController {
         List<OrderCustomerPayload> orders = orderService.getOrdersByCustomer(currentAuthenticatedUser.getId());
         return ResponseEntity.ok(orders);
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{orderId}")
     public OrderProduct findByIdAndUpdate(@PathVariable UUID orderId, @RequestBody OrderProductPaypalPayload body) {
         return orderService.findByIdAndUpdate(orderId, body);
     }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/status/{orderId}")
     public OrderProduct findByIdAndUpdate(@PathVariable UUID orderId, @RequestBody OrderStatus orderStatus) {
         return orderService.findByIdAndUpdateStatus(orderId, orderStatus);
     }
 
+    @GetMapping("/find/{orderId}")
+    public OrderProduct findById(@PathVariable UUID orderId) {
+        return this.orderService.findById(orderId);
+    }
 
+    @DeleteMapping("/{orderId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID orderId) {
+        orderService.findByIdAndDelete(orderId);
+    }
 }

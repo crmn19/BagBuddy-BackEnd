@@ -55,6 +55,23 @@ public class IndirizzoService {
         return indirizzoRepository.save(indirizzo);
     }
 
+    public Indirizzo findAndUpdateIndirizzo(Long indirizzoId, IndirizzoPayload payload) throws IOException {
+        Indirizzo indirizzo = this.findById(indirizzoId);
+        Provincia provincia = provinciaService.findByName(payload.provincia());
+        if (provincia == null) {
+            throw new IOException("Provincia non trovata con il nome: " + payload.provincia());
+        }
+        Comune comune = comuneService.findByName(payload.comune());
+        if (comune == null) {
+            throw new IOException("Comune non trovato con il nome: " + payload.comune());
+        }
+        indirizzo.setVia(payload.via());
+        indirizzo.setCivico(payload.civico());
+        indirizzo.setCap(payload.cap());
+        indirizzo.setProvincia(provincia);
+        indirizzo.setComune(comune);
+        return indirizzoRepository.save(indirizzo);
+    }
 
     public Indirizzo findById(Long id) {
         return indirizzoRepository.findById(id).orElseThrow(() -> new NotFoundException("Nessun indirizzo è stato trovato con l'id: " + id));

@@ -145,4 +145,9 @@ public class OrderProductService {
         found.setStatus(orderStatus);
         return this.orderProductRepository.save(found);
     }
+
+    public void findByIdAndDelete(UUID orderId) {
+        OrderProduct found = this.findById(orderId);
+        this.orderProductRepository.delete(found);
+    }
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/indirizzi")
@@ -46,5 +47,9 @@ public class IndirizzoController {
     @GetMapping("/find")
     public Indirizzo findByCustomer(@AuthenticationPrincipal Customer cliente){
         return indirizzoService.findByCustomer( cliente);
+    }
+    @PutMapping("/{indirizzoId}")
+    public Indirizzo findByIdAndUpdate(@PathVariable Long indirizzoId, @RequestBody IndirizzoPayload body) throws IOException {
+        return indirizzoService.findAndUpdateIndirizzo(indirizzoId, body);
     }
 }

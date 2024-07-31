@@ -32,6 +32,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Product createProduct(@RequestBody @Validated ProductPayload productPayload, BindingResult validation) throws IOException {
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors());
@@ -44,18 +45,21 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Product findByIdAndUpdate(@PathVariable UUID productId, @RequestBody Product body) {
         return productService.findByIdAndUpdate(productId, body);
     }
 
 
     @DeleteMapping("/{productId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID productId) {
         productService.findByIdAndDelete(productId);
     }
 
     @PostMapping("/{productId}/avatar")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Product uploadImage(@PathVariable UUID productId, @RequestParam("avatar") MultipartFile image) throws IOException {
         return this.productService.uploadImage(productId, image);
     }
