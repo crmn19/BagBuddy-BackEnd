@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -53,12 +52,7 @@ public class  JWTAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        for (String pattern : EXCLUDE_PATH_PATTERNS) {
-            if (new AntPathRequestMatcher(pattern).matches(request)) {
-                return true;
-            }
-        }
-        return false;
+        return new AntPathMatcher().match("/auth/**", request.getServletPath());
     }
 
 }
