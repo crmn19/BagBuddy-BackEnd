@@ -51,7 +51,7 @@ npm run dev
 Clone the project
 
 ```bash
-git clone https://github.com/carmen-romano/BagBuddy-BackEnd.git
+git clone https://github.com/crmn19/BagBuddy-BackEnd.git
 ```
 
 Go to the project directory
